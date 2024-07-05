@@ -1,0 +1,56 @@
+#Date		:	28-12-2022
+#Author		:	KA
+#snakemake -v
+#7.19.1
+#which snakemake
+#~/tools/anaconda3-2022.10/bin/snakemake
+
+#wdir=os.getcwd()
+#workdir:"wdir"
+
+import re
+samplename = ["THF"]
+
+##configfile: "envs/nanophase.yaml"
+##include:"rules/filtlong_porechop.smk"
+include:"rules/porechop.smk"
+include:"rules/fq_gunzip.smk"
+include:"rules/flye.smk"
+#include:"rules/minimap.smk"
+#include:"rules/sam2bam.smk"
+include:"rules/perbasecov.smk"
+include:"rules/flyecov.smk"
+include:"rules/metabat2_flyecov.smk"
+include:"rules/mpbc.smk"
+include:"rules/metabat2_mpbcov.smk"
+include:"rules/gtdbtk_metabat2flyecov.smk"
+include:"rules/gtdbtk_metabat2_mpbcov.smk"
+include:"rules/checkm_metabat2flyecov.smk"
+include:"rules/checkm_metabat2_mpbcov.smk"
+
+
+
+rule all:
+	input:
+		expand("porechop/{samplename}_porechop.fastq.gz",samplename=samplename),
+		expand("porechop/{samplename}_porechop1.fastq.gz",samplename=samplename),
+		#expand("porechop/{samplename}_porechop1.fastq",samplename=samplename),
+		expand("porechop/{samplename}_porechop.fastq",samplename=samplename),
+		expand("assembly/flye/{samplename}_assembly/assembly.fasta",samplename=samplename),
+		expand("assembly/flye/{samplename}_assembly/assembly_info.txt",samplename=samplename),
+		#expand("minimap2/{samplename}.sam",samplename=samplename),
+		expand("minimap2/{samplename}.bam",samplename=samplename),
+		expand("minimap2/{samplename}.bam.sort",samplename=samplename),
+		expand("minimap2/{samplename}.bam.sort_readcount",samplename=samplename),
+		expand("minimap2/{samplename}.header",samplename=samplename),
+		expand("minimap2/{samplename}.perbasecov",samplename=samplename),
+		expand("assembly/flye/{samplename}_assembly/cov_fromflye.txt",samplename=samplename),
+		expand("metabat2/{samplename}_metabat2_flyecov/bins/bin.1.fa",samplename=samplename),
+		expand("minimap2/{samplename}.meanperbasecov",samplename=samplename),
+		expand("metabat2/{samplename}_metabat2_mpbcov/bins/bin.1.fa",samplename=samplename),
+		expand("gtdbtk/{samplename}/gtdbtk_metabat2_flyecov/gtdbtk.bac120.summary.tsv",samplename=samplename),
+		expand("gtdbtk/{samplename}/gtdbtk_metabat2_mpbcov/gtdbtk.bac120.summary.tsv",samplename=samplename),
+		expand("checkm/{samplename}/checkm_metabat2_flyecov/{samplename}.metabat2_flyecov.txt",samplename=samplename),
+		expand("checkm/{samplename}/checkm_metabat2_flyecov/{samplename}.metabat2_flyecov.err",samplename=samplename),
+		expand("checkm/{samplename}/checkm_metabat2_mpbcov/{samplename}.metabat2_mpbcov.txt",samplename=samplename),
+		expand("checkm/{samplename}/checkm_metabat2_mpbcov/{samplename}.metabat2_mpbcov.err",samplename=samplename)
